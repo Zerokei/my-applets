@@ -17,7 +17,7 @@ cd enigma
 gcc main.c
 ./a.out
 ```
-input Plugboard, RringSetting, Ciphertext, known plaintext, the left Gear number
+Input Plugboard, RringSetting, Ciphertext, known plaintext, the left Gear number
 ```
 PO LM IU JK NH YT GB VF RE DC
 TIP
