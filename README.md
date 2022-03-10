@@ -1,7 +1,7 @@
 # My Applets
 Here are some applets which I write
 
-## Inverse Index search engine
+## 1. Inverse Index search engine
 You can search the setences of Shakespheare's works
 ```bash
 cd inserve-index-search-engine
@@ -10,7 +10,7 @@ g++ main.cpp
 > to be or not to be
 ```
 
-## Enigama
+## 2. Enigama
 Crack the [enigma](https://zh.wikipedia.org/wiki/%E6%81%A9%E5%B0%BC%E6%A0%BC%E7%8E%9B%E5%AF%86%E7%A0%81%E6%9C%BA)
 ```bash
 cd enigma
