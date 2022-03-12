@@ -14,6 +14,7 @@ g++ main.cpp
 Crack the [enigma](https://zh.wikipedia.org/wiki/%E6%81%A9%E5%B0%BC%E6%A0%BC%E7%8E%9B%E5%AF%86%E7%A0%81%E6%9C%BA)
 ```bash
 cd enigma
+unzip dic.zip
 gcc main.c
 ./a.out
 ```
