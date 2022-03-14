@@ -55,6 +55,22 @@ public:
 Tire Tire_tree;
 
 /*
+stem the words
+*/
+void stemming(string &str){
+    if(str.empty()) return;
+    if(str.length() > 3 && str.find("ing") == str.length()-3){
+        str.erase(str.length()-3, 3);
+    }
+    else if (str.length() > 2 && str.find("ed") == str.length()-2){
+        str.erase(str.length()-2, 2);
+    }
+    // cout<<str<<" "<<str[str.length()-2]<<endl;
+    if(str.length() > 2 && str[str.length()-1] == str[str.length()-2]){
+        str.erase(str.length()-1, 1);
+    }
+}
+/*
 process the words, ignore digitals, dots...
 */
 void filter(string &str){
@@ -68,6 +84,7 @@ void filter(string &str){
         }
         ++it;
     }
+    stemming(str);
 }
 
 /*
@@ -90,7 +107,7 @@ void handling_stop_words_init(){
     ban.insert("a");    
     ban.insert("an");    
     ban.insert("to");    
-    ban.insert("of");    
+    ban.insert("for");    
     ban.insert("or");    
     ban.insert("and");    
     ban.insert("will");   
@@ -101,6 +118,9 @@ void handling_stop_words_init(){
     ban.insert("are");
     ban.insert("be");
     ban.insert("not");
+    ban.insert("that");
+    ban.insert("than");
+    ban.insert("if");
 }
 /*
     judge whether the word is a stop word
@@ -124,29 +144,25 @@ struct buffer{
         str = "";
     }
     bool too_long(){ // judge if the word is too long
-        return str.length() > 14;
+        return str.length() > 15;
     }
     bool enough_count(){ // judge if the count of word is enough to store
-        return count >= 2;
+        return count >= 3;
     }
 }buf;
 
 #define NOP "noooooooop" // define empty word as nooooooooop
 string buffer_process(string str_new){
-    if(handling_stop_words(str_new)){
-        buf.insert(str_new);
-        if(buf.too_long()){ // attached word is too long
-            buf.clear();
-            return NOP;
-        }else if(buf.enough_count()){ // enough count of ignore words
-            return buf.str;
-        }
-    }
-    else {
+    buf.insert(str_new);
+    string str_ret = NOP;
+    if(buf.too_long() || buf.enough_count()){ // attach the stop words and insert it into tire tree
+        str_ret = buf.str;
         buf.clear();
-        return str_new;
+    }else if(!handling_stop_words(str_new)){ // if it is not the stop words
+        str_ret = buf.str;
+        buf.clear();
     }
-    return NOP;
+    return str_ret;
 }
 
 /*
@@ -155,7 +171,7 @@ string buffer_process(string str_new){
 void modify_filename(string& str){
     str.erase(0,3);
     replace(str.begin(),str.end(),'+','/');
-    str = "http://" + str;
+    str = "http:/" + str;
 }
 
 int main(){
@@ -220,11 +236,14 @@ int main(){
 
 
         // extract words in the sentence and query the tire-tree with the words
+        buf.clear();
+        int total = 0;
         for(auto it = str.begin(); it != str.end(); ++it){
             if(*it == ' '){
                 filter(word);
                 string element = buffer_process(word);
                 if(element != NOP){
+                    total ++;
                     long long state = Tire_tree.query(element);
                     for(int i = 0; i < file_count; ++i){
                         if(state & (1ll<<i)){ 
@@ -239,14 +258,11 @@ int main(){
 
         // sort and choose the most likely works(at most 5)
         sort(count, count+file_count);
-        for(int i = 0; i < 5 && count[i].first < 0; ++i){
+        for(int i = 0; (i < 3 || count[i].first < -total*2/3) && i < 10; ++i){
             cout<<filename[count[i].second]<<endl;
-            
         }
 
         cout<<"**********************"<<endl;
     }
-    
-
     return 0;
 }
