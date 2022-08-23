@@ -4,7 +4,7 @@
 #include<cassert>
 using namespace std;
 
-const int MAX_C = 655360; // The size of memory, and the code start at 65536
+const int MAX_C = 65536; // The size of memory, and the code start at 65536
 const int MAX_R = 8; // The number of registers
 const int XLEN  = 16;
 
